@@ -28,13 +28,20 @@
 
     <div>
         <label for="date">Ημερομηνία:</label>
-        <input type="date" id="date" th:field="*{date}" required>
+        <input
+                type="date"
+                id="date"
+                name="date"
+                th:value="${transactionDTO.date != null ? transactionDTO.date : ''}"
+                required
+        >
         <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Πρόβλημα στην Ημερομηνία</div>
     </div>
 
     <div>
-        <label for="type">Τύπος:</label>
+        <label for="type">Τύπος Συναλλαγής:</label>
         <select id="type" th:field="*{type}" required>
+            <option value="" selected>-- Επιλέξτε τύπο --</option>
             <option th:value="INCOME">Έσοδο</option>
             <option th:value="EXPENSE">Έξοδο</option>
         </select>
@@ -50,6 +57,7 @@
     <div>
         <label for="means">Πηγή:</label>
         <select id="means" th:field="*{means}">
+            <option value="" selected hidden>Επιλέξτε τύπο...</option>
             <option th:value="CASH">Μετρητά</option>
             <option th:value="CARD">Κάρτα</option>
             <option th:value="OTHER">Άλλο</option>

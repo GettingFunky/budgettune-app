@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("/transactions")
@@ -24,8 +26,10 @@ public class TransactionController {
     // Εμφάνιση φόρμας δημιουργίας νέας συναλλαγής
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("transactionDTO", new TransactionDTO());
-        return "transaction-form"; // Θα φτιάξουμε ένα simple Thymeleaf form
+        TransactionDTO transactionDTO = new TransactionDTO();
+        transactionDTO.setDate(LocalDate.now()); // Σημερινή ημερομηνία
+        model.addAttribute("transactionDTO", transactionDTO);
+        return "transaction-form";
     }
 
     // Υποβολή νέας συναλλαγής

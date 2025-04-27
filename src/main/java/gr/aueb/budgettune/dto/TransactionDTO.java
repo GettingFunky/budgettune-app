@@ -20,6 +20,7 @@ public class TransactionDTO {
     @DecimalMax(value = "1000000", inclusive = true, message = "Δεν επιτρέπεται ποσό μεγαλύτερο του εκατομμυρίου")
     private BigDecimal amount;
 
+    @PastOrPresent(message = "Η ημερομηνία δεν μπορεί να είναι μελλοντική")
     @NotNull(message = "Η ημερομηνία είναι υποχρεωτική")
     private LocalDate date;
 

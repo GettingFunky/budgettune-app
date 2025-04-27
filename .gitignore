@@ -15,3 +15,26 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Target build
+/target/
+
+# Maven Wrapper
+.mvn/
+!mvn/wrapper/maven-wrapper.jar
+
+# Eclipse
+.project
+.classpath
+
+# OS files
+.DS_Store
+Thumbs.db
+

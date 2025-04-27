@@ -48,6 +48,17 @@
     </div>
 
     <div>
+        <label for="means">Πηγή:</label>
+        <select id="means" th:field="*{means}">
+            <option th:value="CASH">Μετρητά</option>
+            <option th:value="CARD">Κάρτα</option>
+            <option th:value="OTHER">Άλλο</option>
+        </select>
+        <div th:if="${#fields.hasErrors('means')}" th:errors="*{means}">Πρόβλημα στην Πηγή</div>
+
+    </div>
+
+    <div>
         <button type="submit">Αποθήκευση</button>
     </div>
 

@@ -16,6 +16,7 @@ public class TransactionMapper {
         transaction.setDate(transactionDTO.getDate());
         transaction.setType(transactionDTO.getType());
         transaction.setNotes(transactionDTO.getNotes());
+        transaction.setMeans(transactionDTO.getMeans());
 
 //        if (transactionDTO.getUserId() != null) {
 //            User user = userRepository.findById(transactionDTO.getUserId())
@@ -23,8 +24,19 @@ public class TransactionMapper {
 //            transaction.setUser(user);
 //        }
 
+//        User user = userRepository.findById(1L)
+//                .orElseThrow(() -> new UserNotFoundException(1L));
+//        transaction.setUser(user);
+//
+//        return transaction;
+
         User user = userRepository.findById(1L)
-                .orElseThrow(() -> new UserNotFoundException(1L));
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setId(1L);
+                    newUser.setUsername("default_user");
+                    return userRepository.save(newUser);  // Δημιουργία αν δεν υπάρχει
+                });
         transaction.setUser(user);
 
         return transaction;
@@ -39,6 +51,7 @@ public class TransactionMapper {
         dto.setDate(transaction.getDate());
         dto.setType(transaction.getType());
         dto.setNotes(transaction.getNotes());
+        dto.setMeans(transaction.getMeans());
 
         if (transaction.getUser() != null) {
             dto.setUserId(transaction.getUser().getId());

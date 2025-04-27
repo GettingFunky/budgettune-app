@@ -17,6 +17,7 @@
         <th>Ποσό</th>
         <th>Ημερομηνία</th>
         <th>Τύπος</th>
+        <th>Πηγή</th>
         <th>Σημειώσεις</th>
         <th>Ενέργειες</th>
     </tr>
@@ -27,6 +28,7 @@
         <td th:text="${transaction.amount}">Ποσό</td>
         <td th:text="${transaction.date}">Ημερομηνία</td>
         <td th:text="${transaction.type}">Τύπος</td>
+        <td th:text="${transaction.means}">Πηγή</td>
         <td th:text="${transaction.notes}">Σημειώσεις</td>
         <td>
             <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}">✏️ Επεξεργασία</a>

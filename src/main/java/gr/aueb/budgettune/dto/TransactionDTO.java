@@ -1,6 +1,7 @@
 package gr.aueb.budgettune.dto;
 
 import gr.aueb.budgettune.model.TransactionType;
+import gr.aueb.budgettune.model.TransactionMeans;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -24,6 +25,8 @@ public class TransactionDTO {
 
     @NotNull(message = "Ο τύπος συναλλαγής είναι υποχρεωτικός")
     private TransactionType type;
+
+    private TransactionMeans means;
 
     @Size(max = 500, message = "Οι σημειώσεις δεν πρέπει να ξεπερνούν τους 500 χαρακτήρες")
     private String notes;
@@ -77,6 +80,14 @@ public class TransactionDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public TransactionMeans getMeans() {
+        return means;
+    }
+
+    public void setMeans(TransactionMeans means) {
+        this.means = means;
     }
 
     public Long getUserId() {

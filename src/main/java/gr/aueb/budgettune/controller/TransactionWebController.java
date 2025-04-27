@@ -1,5 +1,6 @@
 //package gr.aueb.budgettune.controller;
 //
+//import gr.aueb.budgettune.dto.TransactionDTO;
 //import gr.aueb.budgettune.model.Transaction;
 //import gr.aueb.budgettune.model.User;
 //import gr.aueb.budgettune.service.TransactionService;
@@ -28,7 +29,7 @@
 //    public String showDashboard(Model model, Authentication authentication) {
 //        String username = authentication.getName();
 //        User user = userService.findByUsername(username).orElseThrow();
-//        List<Transaction> transactions = transactionService.findAllByUser(user);
+//        List<TransactionDTO> transactions = transactionService.findAllByUser(user);
 //
 //        model.addAttribute("username", username);
 //        model.addAttribute("transactions", transactions);
@@ -51,14 +52,14 @@
 //
 //
 //    // POST – Αποθήκευση συναλλαγής
-//    @PostMapping("/transactions/add")
-//    public String processAddTransaction(@ModelAttribute("transaction") Transaction transaction,
-//                                        Authentication authentication) {
-//        String username = authentication.getName();
-//        User user = userService.findByUsername(username).orElseThrow();
-//        transaction.setUser(user);
-//        transactionService.save(transaction);
-//        return "redirect:/dashboard";
-//    }
+////    @PostMapping("/transactions/add")
+////    public String processAddTransaction(@ModelAttribute("transaction") Transaction transaction,
+////                                        Authentication authentication) {
+////        String username = authentication.getName();
+////        User user = userService.findByUsername(username).orElseThrow();
+////        transaction.setUser(user);
+////        transactionService.save(transaction);
+////        return "redirect:/dashboard";
+////    }
 //
 //}

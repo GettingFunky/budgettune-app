@@ -20,6 +20,9 @@ public class Transaction {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private TransactionMeans means;
+
     private String notes;
 
     @Enumerated(EnumType.STRING)
@@ -96,5 +99,13 @@ public class Transaction {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public TransactionMeans getMeans() {
+        return means;
+    }
+
+    public void setMeans(TransactionMeans means) {
+        this.means = means;
     }
 }

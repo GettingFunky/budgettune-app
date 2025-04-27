@@ -1,0 +1,83 @@
+package gr.aueb.budgettune.controller;
+
+import gr.aueb.budgettune.dto.TransactionDTO;
+import gr.aueb.budgettune.service.TransactionService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+
+@Controller
+@RequestMapping("/transactions")
+public class TransactionController {
+
+    private final TransactionService transactionService;
+
+    @Autowired
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    // Εμφάνιση φόρμας δημιουργίας νέας συναλλαγής
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("transactionDTO", new TransactionDTO());
+        return "transaction-form"; // Θα φτιάξουμε ένα simple Thymeleaf form
+    }
+
+    // Υποβολή νέας συναλλαγής
+    @PostMapping("/create")
+    public String createTransaction(@Valid @ModelAttribute("transactionDTO") TransactionDTO transactionDTO,
+                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "transaction-form";
+        }
+
+        transactionService.createTransaction(transactionDTO);
+        return "redirect:/transactions/list";
+    }
+
+    @GetMapping("/list")
+    public String listTransactions(Model model) {
+        model.addAttribute("transactions", transactionService.findAllTransactions());
+        return "transactions-list";
+    }
+
+    // Εμφάνιση μιας συναλλαγής
+    @GetMapping("/{id}")
+    public String viewTransaction(@PathVariable Long id, Model model) {
+        TransactionDTO transactionDTO = transactionService.findTransactionById(id);
+        model.addAttribute("transaction", transactionDTO);
+        return "transaction-details"; // Placeholder σελίδα
+    }
+
+    // Εμφάνιση φόρμας επεξεργασίας συναλλαγής
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        TransactionDTO transactionDTO = transactionService.findTransactionById(id);
+        model.addAttribute("transactionDTO", transactionDTO);
+        return "transaction-form";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateTransaction(@PathVariable Long id,
+                                    @Valid @ModelAttribute("transactionDTO") TransactionDTO transactionDTO,
+                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "transaction-form";
+        }
+
+        transactionService.updateTransaction(id, transactionDTO);
+        return "redirect:/transactions/list";
+    }
+
+    // Διαγραφή συναλλαγής
+    @PostMapping("/{id}/delete")
+    public String deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteTransaction(id);
+        return "redirect:/transactions/list";
+    }
+}

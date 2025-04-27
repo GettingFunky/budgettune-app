@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Λίστα Συναλλαγών</title>
+</head>
+<body>
+
+<h1>Λίστα Συναλλαγών</h1>
+
+<a th:href="@{/transactions/create}">➕ Νέα Συναλλαγή</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Περιγραφή</th>
+        <th>Ποσό</th>
+        <th>Ημερομηνία</th>
+        <th>Τύπος</th>
+        <th>Σημειώσεις</th>
+        <th>Ενέργειες</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="transaction : ${transactions}">
+        <td th:text="${transaction.description}">Περιγραφή</td>
+        <td th:text="${transaction.amount}">Ποσό</td>
+        <td th:text="${transaction.date}">Ημερομηνία</td>
+        <td th:text="${transaction.type}">Τύπος</td>
+        <td th:text="${transaction.notes}">Σημειώσεις</td>
+        <td>
+            <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}">✏️ Επεξεργασία</a>
+            |
+            <form th:action="@{/transactions/{id}/delete(id=${transaction.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη συναλλαγή;')">🗑️ Διαγραφή</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

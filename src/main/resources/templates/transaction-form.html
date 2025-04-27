@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Καταχώρηση Συναλλαγής</title>
+</head>
+<body>
+
+<h1>Καταχώρηση Συναλλαγής</h1>
+
+<form th:action="@{${transactionDTO.id} == null ? '/transactions/create' : '/transactions/' + ${transactionDTO.id} + '/edit'}" th:object="${transactionDTO}" method="post">
+
+
+
+    <input type="hidden" th:field="*{id}" />
+
+    <div>
+        <label for="description">Περιγραφή:</label>
+        <input type="text" id="description" th:field="*{description}" required>
+        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Πρόβλημα στην Περιγραφή</div>
+    </div>
+
+    <div>
+        <label for="amount">Ποσό:</label>
+        <input type="number" step="0.01" id="amount" th:field="*{amount}" required>
+        <div th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Πρόβλημα στο Ποσό</div>
+    </div>
+
+    <div>
+        <label for="date">Ημερομηνία:</label>
+        <input type="date" id="date" th:field="*{date}" required>
+        <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Πρόβλημα στην Ημερομηνία</div>
+    </div>
+
+    <div>
+        <label for="type">Τύπος:</label>
+        <select id="type" th:field="*{type}" required>
+            <option th:value="INCOME">Έσοδο</option>
+            <option th:value="EXPENSE">Έξοδο</option>
+        </select>
+        <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Πρόβλημα στον Τύπο</div>
+    </div>
+
+    <div>
+        <label for="notes">Σημειώσεις:</label>
+        <input type="text" id="notes" th:field="*{notes}">
+        <div th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}">Πρόβλημα στις Σημειώσεις</div>
+    </div>
+
+    <div>
+        <button type="submit">Αποθήκευση</button>
+    </div>
+
+</form>
+
+</body>
+</html>

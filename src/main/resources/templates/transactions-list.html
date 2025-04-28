@@ -10,6 +10,41 @@
 
 <a th:href="@{/transactions/create}">➕ Νέα Συναλλαγή</a>
 
+<form th:action="@{/transactions/list}" method="get" style="margin-bottom: 20px;">
+
+    <!-- Περιγραφή -->
+    <label>Περιγραφή:</label>
+    <input type="text" name="description">
+
+    <!-- Ποσό -->
+    <label>Ποσό Από:</label>
+    <input type="number" name="amountMin" step="0.01">
+    <label>Έως:</label>
+    <input type="number" name="amountMax" step="0.01">
+
+    <!-- Ημερομηνία -->
+    <label>Ημερομηνία Από:</label>
+    <input type="date" name="dateFrom">
+    <label>Έως:</label>
+    <input type="date" name="dateTo">
+
+    <!-- Τύπος -->
+    <label>Τύπος:</label>
+    <input type="checkbox" name="types" value="INCOME"> Έσοδο
+    <input type="checkbox" name="types" value="EXPENSE"> Έξοδο
+
+    <!-- Πηγή -->
+    <label>Πηγή:</label>
+    <input type="checkbox" name="means" value="CASH"> Μετρητά
+    <input type="checkbox" name="means" value="CARD"> Κάρτα
+    <input type="checkbox" name="means" value="OTHER"> Άλλο
+
+    <!-- Κουμπί Αναζήτησης -->
+    <button type="submit">Αναζήτηση/Επαναφορά</button>
+
+</form>
+
+
 <table border="1">
     <thead>
     <tr>

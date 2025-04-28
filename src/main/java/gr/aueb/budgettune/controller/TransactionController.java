@@ -45,10 +45,23 @@ public class TransactionController {
     }
 
     @GetMapping("/list")
-    public String listTransactions(Model model) {
-        model.addAttribute("transactions", transactionService.findAllTransactions());
+    public String listTransactions(
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double amountMin,
+            @RequestParam(required = false) Double amountMax,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate dateTo,
+            @RequestParam(required = false) String[] types,
+            @RequestParam(required = false) String[] means,
+            Model model
+    ) {
+        model.addAttribute("transactions", transactionService.filterTransactions(
+                description, amountMin, amountMax, dateFrom, dateTo, types, means
+        ));
         return "transactions-list";
     }
+
+
 
     // Εμφάνιση μιας συναλλαγής
     @GetMapping("/{id}")

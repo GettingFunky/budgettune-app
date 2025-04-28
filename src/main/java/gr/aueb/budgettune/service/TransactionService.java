@@ -3,6 +3,7 @@ package gr.aueb.budgettune.service;
 import gr.aueb.budgettune.dto.TransactionDTO;
 import gr.aueb.budgettune.model.User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TransactionService {
@@ -18,4 +19,14 @@ public interface TransactionService {
     List<TransactionDTO> findAllTransactions();
 
     List<TransactionDTO> findAllByUser(User user);
+
+    List<TransactionDTO> filterTransactions(
+            String description,
+            Double amountMin,
+            Double amountMax,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String[] types,
+            String[] means
+    );
 }

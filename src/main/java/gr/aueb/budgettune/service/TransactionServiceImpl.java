@@ -10,6 +10,7 @@ import gr.aueb.budgettune.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,4 +75,49 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(TransactionMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TransactionDTO> filterTransactions(
+            String description,
+            Double amountMin,
+            Double amountMax,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String[] types,
+            String[] means) {
+
+        List<Transaction> allTransactions = transactionRepository.findAll();
+
+        // Φιλτράρουμε με βάση τα φίλτρα
+        return allTransactions.stream()
+                .filter(t -> description == null || t.getDescription().toLowerCase().contains(description.toLowerCase()))
+                .filter(t -> amountMin == null || t.getAmount().doubleValue() >= amountMin)
+                .filter(t -> amountMax == null || t.getAmount().doubleValue() <= amountMax)
+                .filter(t -> dateFrom == null || !t.getDate().isBefore(dateFrom))
+                .filter(t -> dateTo == null || !t.getDate().isAfter(dateTo))
+                .filter(t -> types == null || types.length == 0 || containsType(types, t.getType().name()))
+                .filter(t -> means == null || means.length == 0 || containsMeans(means, t.getMeans()))
+                .map(TransactionMapper::toDTO)
+                .toList();
+    }
+
+    private boolean containsType(String[] types, String type) {
+        for (String t : types) {
+            if (t.equalsIgnoreCase(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean containsMeans(String[] means, gr.aueb.budgettune.model.TransactionMeans transactionMeans) {
+        if (transactionMeans == null) return false;
+        for (String m : means) {
+            if (m.equalsIgnoreCase(transactionMeans.name())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

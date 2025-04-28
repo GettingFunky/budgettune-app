@@ -7,9 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // (αν χρειαστεί για μελλοντικό ρόλο-based filtering)
 public class SecurityConfig {
 
     @Bean
@@ -22,7 +24,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(
+                                "/register",
+                                "/login",
+                                "/logo.png",       // ➡️ Εδώ! δώσαμε πρόσβαση στο logo
+                                "/css/**",
+                                "/js/**"
+                        ).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Αν χρειαστεί μετά
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -37,14 +46,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll()
-//                );
-//        return http.build();
-//    }
 }

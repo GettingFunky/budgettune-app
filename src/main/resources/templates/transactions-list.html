@@ -123,7 +123,7 @@
                 <td>
                     <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}" class="btn btn-sm btn-warning">✏️</a>
                     <form th:action="@{/transactions/{id}/delete(id=${transaction.id})}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Είστε σίγουρος;')">🗑️</button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Είστε σίγουρος για τη διαγραφή;')">🗑️</button>
                     </form>
                 </td>
             </tr>

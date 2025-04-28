@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Controller
@@ -55,11 +56,30 @@ public class TransactionController {
             @RequestParam(required = false) String[] means,
             Model model
     ) {
-        model.addAttribute("transactions", transactionService.filterTransactions(
+        // ➡️ Πρώτα φέρνουμε τα φιλτραρισμένα Transactions
+        List<TransactionDTO> filteredTransactions = transactionService.filterTransactions(
                 description, amountMin, amountMax, dateFrom, dateTo, types, means
-        ));
+        );
+
+        // ➡️ Βάζουμε τα Transactions στο model
+        model.addAttribute("transactions", filteredTransactions);
+
+        // ➡️ Υπολογίζουμε Στατιστικά
+        model.addAttribute("totalTransactions", filteredTransactions.size());
+
+        model.addAttribute("totalIncome", filteredTransactions.stream()
+                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.INCOME)
+                .map(TransactionDTO::getAmount)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
+
+        model.addAttribute("totalExpense", filteredTransactions.stream()
+                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.EXPENSE)
+                .map(TransactionDTO::getAmount)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
+
         return "transactions-list";
     }
+
 
 
 

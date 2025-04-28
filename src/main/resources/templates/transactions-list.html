@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Λίστα Συναλλαγών</title>
+    <title>Λίστα Συναλλαγών | BudgetTune</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -10,81 +10,114 @@
 <!-- Header -->
 <div th:replace="fragments/header :: header"></div>
 
-<h1>Λίστα Συναλλαγών</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Λίστα Συναλλαγών</h1>
 
-<a th:href="@{/transactions/create}">➕ Νέα Συναλλαγή</a>
+    <div class="mb-4">
+        <a th:href="@{/transactions/create}" class="btn btn-success">➕ Νέα Συναλλαγή</a>
+    </div>
 
-<form th:action="@{/transactions/list}" method="get" style="margin-bottom: 20px;">
+    <!-- Φίλτρα Αναζήτησης -->
+    <form th:action="@{/transactions/list}" method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label class="form-label">Περιγραφή</label>
+            <input type="text" name="description" class="form-control">
+        </div>
 
-    <!-- Περιγραφή -->
-    <label>Περιγραφή:</label>
-    <input type="text" name="description">
+        <div class="col-md-3">
+            <label class="form-label">Ποσό Από</label>
+            <input type="number" name="amountMin" step="0.01" class="form-control">
+        </div>
 
-    <!-- Ποσό -->
-    <label>Ποσό Από:</label>
-    <input type="number" name="amountMin" step="0.01">
-    <label>Έως:</label>
-    <input type="number" name="amountMax" step="0.01">
+        <div class="col-md-3">
+            <label class="form-label">Ποσό Έως</label>
+            <input type="number" name="amountMax" step="0.01" class="form-control">
+        </div>
 
-    <!-- Ημερομηνία -->
-    <label>Ημερομηνία Από:</label>
-    <input type="date" name="dateFrom">
-    <label>Έως:</label>
-    <input type="date" name="dateTo">
+        <div class="col-md-3">
+            <label class="form-label">Ημερομηνία Από</label>
+            <input type="date" name="dateFrom" class="form-control">
+        </div>
 
-    <!-- Τύπος -->
-    <label>Τύπος:</label>
-    <input type="checkbox" name="types" value="INCOME"> Έσοδο
-    <input type="checkbox" name="types" value="EXPENSE"> Έξοδο
+        <div class="col-md-3">
+            <label class="form-label">Ημερομηνία Έως</label>
+            <input type="date" name="dateTo" class="form-control">
+        </div>
 
-    <!-- Πηγή -->
-    <label>Πηγή:</label>
-    <input type="checkbox" name="means" value="CASH"> Μετρητά
-    <input type="checkbox" name="means" value="CARD"> Κάρτα
-    <input type="checkbox" name="means" value="OTHER"> Άλλο
+        <div class="col-md-3">
+            <label class="form-label">Τύπος</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="types" value="INCOME">
+                <label class="form-check-label">Έσοδο</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="types" value="EXPENSE">
+                <label class="form-check-label">Έξοδο</label>
+            </div>
+        </div>
 
-    <!-- Κουμπί Αναζήτησης -->
-    <button type="submit">Αναζήτηση/Επαναφορά</button>
+        <div class="col-md-3">
+            <label class="form-label">Πηγή</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="means" value="CASH">
+                <label class="form-check-label">Μετρητά</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="means" value="CARD">
+                <label class="form-check-label">Κάρτα</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="means" value="OTHER">
+                <label class="form-check-label">Άλλο</label>
+            </div>
+        </div>
 
-</form>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Αναζήτηση / Επαναφορά</button>
+        </div>
+    </form>
 
+    <!-- Πίνακας Συναλλαγών -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Περιγραφή</th>
+                <th>Ποσό</th>
+                <th>Ημερομηνία</th>
+                <th>Τύπος</th>
+                <th>Πηγή</th>
+                <th>Σημειώσεις</th>
+                <th>Ενέργειες</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.description}">Περιγραφή</td>
+                <td th:text="${transaction.amount}">0.00</td>
+                <td th:text="${transaction.date}">2025-01-01</td>
+                <td th:text="${transaction.type}">Τύπος</td>
+                <td th:text="${transaction.means}">Πηγή</td>
+                <td th:text="${transaction.notes}">Σημειώσεις</td>
+                <td>
+                    <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}" class="btn btn-sm btn-warning">✏️</a>
+                    <form th:action="@{/transactions/{id}/delete(id=${transaction.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε;')">🗑️</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>Περιγραφή</th>
-        <th>Ποσό</th>
-        <th>Ημερομηνία</th>
-        <th>Τύπος</th>
-        <th>Πηγή</th>
-        <th>Σημειώσεις</th>
-        <th>Ενέργειες</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="transaction : ${transactions}">
-        <td th:text="${transaction.description}">Περιγραφή</td>
-        <td th:text="${transaction.amount}">Ποσό</td>
-        <td th:text="${transaction.date}">Ημερομηνία</td>
-        <td th:text="${transaction.type}">Τύπος</td>
-        <td th:text="${transaction.means}">Πηγή</td>
-        <td th:text="${transaction.notes}">Σημειώσεις</td>
-        <td>
-            <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}">✏️ Επεξεργασία</a>
-            |
-            <form th:action="@{/transactions/{id}/delete(id=${transaction.id})}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη συναλλαγή;')">🗑️ Διαγραφή</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <!-- Στατιστικά -->
+    <div class="mt-4">
+        <p><strong>Σύνολο Συναλλαγών:</strong> <span th:text="${totalTransactions}">0</span></p>
+        <p><strong>Συνολικά Έσοδα:</strong> <span th:text="${totalIncome}">0</span> €</p>
+        <p><strong>Συνολικά Έξοδα:</strong> <span th:text="${totalExpense}">0</span> €</p>
+        <p><strong>Καθαρό Υπόλοιπο:</strong> <span th:text="${balance}">0</span> €</p>
+    </div>
 
-<div style="margin-top: 20px;">
-    <p><strong>Σύνολο Συναλλαγών:</strong> <span th:text="${totalTransactions}">0</span></p>
-    <p><strong>Συνολικά Έσοδα:</strong> <span th:text="${totalIncome}">0</span> €</p>
-    <p><strong>Συνολικά Έξοδα:</strong> <span th:text="${totalExpense}">0</span> €</p>
-    <p><strong>Καθαρό Υπόλοιπο:</strong> <span th:text="${balance}">0</span> €</p>
 </div>
 
 <!-- Footer -->

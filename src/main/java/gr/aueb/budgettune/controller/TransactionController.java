@@ -77,6 +77,20 @@ public class TransactionController {
                 .map(TransactionDTO::getAmount)
                 .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
 
+        // Πάρε τα ήδη υπολογισμένα συνολικά
+        java.math.BigDecimal totalIncome = filteredTransactions.stream()
+                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.INCOME)
+                .map(TransactionDTO::getAmount)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+
+        java.math.BigDecimal totalExpense = filteredTransactions.stream()
+                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.EXPENSE)
+                .map(TransactionDTO::getAmount)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+
+// Βάλε το balance στο Model
+        model.addAttribute("balance", totalIncome.subtract(totalExpense));
+
         return "transactions-list";
     }
 

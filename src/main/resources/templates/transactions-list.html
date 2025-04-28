@@ -28,10 +28,13 @@
             border-top-color: white; /* Φθίνουσα */
         }
 
-        th:hover {
-            background-color: #5a9d9b; /* Λίγο πιο ανοιχτό στο hover */
+        /* ✅ Χρώμα hover ΜΟΝΟ για sortable headers */
+        th:not(.sorttable_nosort):hover {
+            background-color: #5a9d9b;
         }
     </style>
+
+
 
 </head>
 <body>
@@ -111,13 +114,13 @@
         <table class="table table-striped table-hover table-bordered sortable">
         <thead class="table-dark">
             <tr>
-                <th>Περιγραφή</th>
-                <th>Ποσό</th>
-                <th>Ημερομηνία</th>
-                <th>Τύπος</th>
-                <th>Πηγή</th>
-                <th>Σημειώσεις</th>
-                <th>Ενέργειες</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Περιγραφή</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Ποσό</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Ημερομηνία</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Τύπος</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Πηγή</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Σημειώσεις</th>
+                <th class="sorttable_nosort">Ενέργειες</th>
             </tr>
             </thead>
             <tbody>

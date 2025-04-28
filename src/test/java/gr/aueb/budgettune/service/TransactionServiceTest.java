@@ -9,12 +9,9 @@ import gr.aueb.budgettune.repository.TransactionRepository;
 import gr.aueb.budgettune.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.math.BigDecimal;
@@ -23,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,22 +29,16 @@ class TransactionServiceTest {
     private TransactionServiceImpl transactionService;
     private TransactionRepository transactionRepository;
     private UserRepository userRepository;
+    private User user;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         transactionRepository = mock(TransactionRepository.class);
         userRepository = mock(UserRepository.class);
         transactionService = new TransactionServiceImpl(transactionRepository, userRepository);
 
-        // 🛡️ Φτιάχνουμε ψεύτικο authenticated χρήστη
-        Authentication auth = new UsernamePasswordAuthenticationToken("testuser", null, Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(auth);
-    }
-
-    @Test
-    void createTransaction_ShouldSaveAndReturnTransaction() {
-        // Arrange
-        User user = new User();
+        user = new User();
         user.setId(1L);
         user.setUsername("testuser");
         user.setPassword("password");
@@ -54,6 +46,12 @@ class TransactionServiceTest {
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
 
+        Authentication auth = new UsernamePasswordAuthenticationToken("testuser", null, Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @Test
+    void createTransaction_ShouldSaveAndReturnTransaction() {
         Transaction transaction = new Transaction();
         transaction.setId(1L);
         transaction.setAmount(BigDecimal.valueOf(100.0));
@@ -70,10 +68,8 @@ class TransactionServiceTest {
         transactionDTO.setDescription("Test Transaction");
         transactionDTO.setType(TransactionType.INCOME);
 
-        // Act
         TransactionDTO result = transactionService.createTransaction(transactionDTO);
 
-        // Assert
         assertNotNull(result);
         assertEquals("Test Transaction", result.getDescription());
         assertEquals(BigDecimal.valueOf(100.0), result.getAmount());
@@ -81,11 +77,6 @@ class TransactionServiceTest {
 
     @Test
     void findAllTransactions_ShouldReturnUserTransactions() {
-        // Arrange
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("testuser");
-
         Transaction transaction = new Transaction();
         transaction.setId(1L);
         transaction.setAmount(BigDecimal.valueOf(50.0));
@@ -94,24 +85,16 @@ class TransactionServiceTest {
         transaction.setType(TransactionType.EXPENSE);
         transaction.setUser(user);
 
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
         when(transactionRepository.findAllByUser(user)).thenReturn(Collections.singletonList(transaction));
 
-        // Act
         var result = transactionService.findAllTransactions();
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals("Groceries", result.get(0).getDescription());
     }
 
     @Test
     void filterTransactions_ShouldReturnCorrectFilteredResults() {
-        // Arrange
-        User testUser = new User();
-        testUser.setId(1L);
-        testUser.setUsername("testuser");
-
         Transaction t1 = new Transaction();
         t1.setId(1L);
         t1.setDescription("Supermarket");
@@ -119,7 +102,7 @@ class TransactionServiceTest {
         t1.setDate(LocalDate.of(2025, 4, 27));
         t1.setType(TransactionType.EXPENSE);
         t1.setMeans(TransactionMeans.CARD);
-        t1.setUser(testUser);
+        t1.setUser(user);
 
         Transaction t2 = new Transaction();
         t2.setId(2L);
@@ -128,25 +111,60 @@ class TransactionServiceTest {
         t2.setDate(LocalDate.of(2025, 4, 25));
         t2.setType(TransactionType.INCOME);
         t2.setMeans(TransactionMeans.CASH);
-        t2.setUser(testUser);
+        t2.setUser(user);
 
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
-        when(transactionRepository.findAllByUser(testUser)).thenReturn(List.of(t1, t2));
+        when(transactionRepository.findAllByUser(user)).thenReturn(List.of(t1, t2));
 
-        // Act
         List<TransactionDTO> results = transactionService.filterTransactions(
-                "Sal",       // Περιγραφή που περιέχει "Sal"
-                null,        // amountMin
-                null,        // amountMax
-                null,        // dateFrom
-                null,        // dateTo
-                new String[]{"INCOME"},  // Μόνο INCOME
-                new String[]{"CASH"}     // Μόνο CASH
+                "Sal", null, null, null, null,
+                new String[]{"INCOME"},
+                new String[]{"CASH"}
         );
 
-        // Assert
         assertEquals(1, results.size());
         assertEquals("Salary", results.get(0).getDescription());
     }
 
+    @Test
+    void updateTransaction_ShouldUpdateAndReturnTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setId(1L);
+        transaction.setDescription("Old Description");
+        transaction.setAmount(new BigDecimal("10.00"));
+        transaction.setDate(LocalDate.of(2024, 1, 1));
+        transaction.setType(TransactionType.INCOME);
+        transaction.setMeans(TransactionMeans.CASH);
+        transaction.setUser(user);
+
+        when(transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
+        when(transactionRepository.save(any(Transaction.class))).thenAnswer(i -> i.getArgument(0));
+
+        TransactionDTO updatedDTO = new TransactionDTO();
+        updatedDTO.setId(1L);
+        updatedDTO.setDescription("New Description");
+        updatedDTO.setAmount(new BigDecimal("20.00"));
+        updatedDTO.setDate(LocalDate.of(2025, 1, 1));
+        updatedDTO.setType(TransactionType.EXPENSE);
+        updatedDTO.setMeans(TransactionMeans.CARD);
+
+        TransactionDTO result = transactionService.updateTransaction(1L, updatedDTO);
+
+        assertThat(result.getDescription()).isEqualTo("New Description");
+        assertThat(result.getAmount()).isEqualTo(new BigDecimal("20.00"));
+        assertThat(result.getType()).isEqualTo(TransactionType.EXPENSE);
+        verify(transactionRepository).save(any(Transaction.class));
+    }
+
+    @Test
+    void deleteTransaction_ShouldDeleteTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setId(1L);
+        transaction.setUser(user);
+
+        when(transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
+
+        transactionService.deleteTransaction(1L);
+
+        verify(transactionRepository).delete(transaction);
+    }
 }

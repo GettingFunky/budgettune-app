@@ -1,0 +1,15 @@
+<!-- templates/fragments/header.html -->
+<header class="navbar navbar-expand-lg" style="background-color: #41807E;" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="/">
+            <img src="/logo.png" alt="BudgetTune Logo" height="30" class="d-inline-block align-text-top">
+            BudgetTune
+        </a>
+        <div class="d-flex">
+            <a class="btn btn-light me-2" th:href="@{/transactions/create}">➕ Νέα Συναλλαγή</a>
+            <a class="btn btn-light me-2" th:href="@{/transactions/list}">📄 Συναλλαγές</a>
+            <span class="navbar-text text-white me-3" th:text="'👤 ' + ${#authentication.name}">Χρήστης</span>
+            <a class="btn btn-outline-light" th:href="@{/logout}">🚪 Logout</a>
+        </div>
+    </div>
+</header>

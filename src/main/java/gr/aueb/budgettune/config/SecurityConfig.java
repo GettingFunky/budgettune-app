@@ -27,7 +27,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/register",
                                 "/login",
-                                "/logo.png",       // ➡️ Εδώ! δώσαμε πρόσβαση στο logo
+                                "/logo.png",
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()

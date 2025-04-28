@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Εγγραφή</title>
+</head>
+<body>
+
+<h1>Εγγραφή Χρήστη</h1>
+
+<form th:action="@{/register}" th:object="${userDTO}" method="post">
+
+    <div>
+        <label for="username">Όνομα Χρήστη:</label>
+        <input type="text" id="username" th:field="*{username}" required>
+        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+    </div>
+
+    <div>
+        <label for="password">Κωδικός:</label>
+        <input type="password" id="password" th:field="*{password}" required>
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    </div>
+
+    <div th:if="${registrationError}">
+        <p th:text="${registrationError}" style="color:red;"></p>
+    </div>
+
+    <div>
+        <button type="submit">Εγγραφή</button>
+    </div>
+
+</form>
+
+<p>Έχεις ήδη λογαριασμό; <a th:href="@{/login}">Σύνδεση</a></p>
+
+</body>
+</html>

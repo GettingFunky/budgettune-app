@@ -1,16 +1,19 @@
 package gr.aueb.budgettune.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserDTO {
+
+    @NotBlank(message = "Το όνομα χρήστη είναι υποχρεωτικό")
+    @Size(min = 3, max = 20, message = "Το όνομα χρήστη πρέπει να είναι από 3 έως 20 χαρακτήρες")
     private String username;
+
+    @NotBlank(message = "Ο κωδικός είναι υποχρεωτικός")
+    @Size(min = 6, max = 100, message = "Ο κωδικός πρέπει να είναι τουλάχιστον 6 χαρακτήρες")
     private String password;
 
-    public UserDTO() {}
-
-    public UserDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
+    // Getters και Setters
     public String getUsername() {
         return username;
     }

@@ -8,6 +8,8 @@ import gr.aueb.budgettune.model.User;
 import gr.aueb.budgettune.repository.TransactionRepository;
 import gr.aueb.budgettune.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,12 +28,25 @@ public class TransactionServiceImpl implements TransactionService {
         this.userRepository = userRepository;
     }
 
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     @Override
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
         Transaction transaction = TransactionMapper.toEntity(transactionDTO, userRepository);
+
+        // ➡️ Βρίσκουμε ΠΑΝΤΑ τον τρέχοντα χρήστη
+        User currentUser = getCurrentUser();
+        transaction.setUser(currentUser);
+
         Transaction savedTransaction = transactionRepository.save(transaction);
         return TransactionMapper.toDTO(savedTransaction);
     }
+
 
     @Override
     public TransactionDTO findTransactionById(Long id) {
@@ -46,8 +61,11 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new TransactionNotFoundException(id));
 
         Transaction updatedTransaction = TransactionMapper.toEntity(transactionDTO, userRepository);
+        updatedTransaction.setId(id); // Βάζουμε το σωστό ID
 
-        updatedTransaction.setId(id); // **ΠΡΟΣΟΧΗ: Βάζουμε το σωστό id!**
+        // ➡️ Πολύ Σημαντικό: Βάζουμε ξανά τον τρέχοντα χρήστη!
+        User currentUser = getCurrentUser();
+        updatedTransaction.setUser(currentUser);
 
         Transaction savedTransaction = transactionRepository.save(updatedTransaction);
         return TransactionMapper.toDTO(savedTransaction);
@@ -62,7 +80,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDTO> findAllTransactions() {
-        List<Transaction> transactions = transactionRepository.findAll();
+        User user = getCurrentUser();
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
         return transactions.stream()
                 .map(TransactionMapper::toDTO)
                 .collect(Collectors.toList());
@@ -86,9 +105,9 @@ public class TransactionServiceImpl implements TransactionService {
             String[] types,
             String[] means) {
 
-        List<Transaction> allTransactions = transactionRepository.findAll();
+        User user = getCurrentUser();
+        List<Transaction> allTransactions = transactionRepository.findAllByUser(user);
 
-        // Φιλτράρουμε με βάση τα φίλτρα
         return allTransactions.stream()
                 .filter(t -> description == null || t.getDescription().toLowerCase().contains(description.toLowerCase()))
                 .filter(t -> amountMin == null || t.getAmount().doubleValue() >= amountMin)
@@ -98,7 +117,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .filter(t -> types == null || types.length == 0 || containsType(types, t.getType().name()))
                 .filter(t -> means == null || means.length == 0 || containsMeans(means, t.getMeans()))
                 .map(TransactionMapper::toDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private boolean containsType(String[] types, String type) {
@@ -119,5 +138,4 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return false;
     }
-
 }

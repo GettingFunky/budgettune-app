@@ -80,12 +80,23 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDTO> findAllTransactions() {
-        User user = getCurrentUser();
-        List<Transaction> transactions = transactionRepository.findAllByUser(user);
-        return transactions.stream()
-                .map(TransactionMapper::toDTO)
-                .collect(Collectors.toList());
+        User currentUser = getCurrentUser();
+
+        if (currentUser.getRole().equalsIgnoreCase("ADMIN")) {
+            // ➡️ Admin βλέπει ΟΛΕΣ τις συναλλαγές
+            List<Transaction> allTransactions = transactionRepository.findAll();
+            return allTransactions.stream()
+                    .map(TransactionMapper::toDTO)
+                    .collect(Collectors.toList());
+        } else {
+            // ➡️ Απλός χρήστης βλέπει ΜΟΝΟ τις δικές του
+            List<Transaction> userTransactions = transactionRepository.findAllByUser(currentUser);
+            return userTransactions.stream()
+                    .map(TransactionMapper::toDTO)
+                    .collect(Collectors.toList());
+        }
     }
+
 
     @Override
     public List<TransactionDTO> findAllByUser(User user) {

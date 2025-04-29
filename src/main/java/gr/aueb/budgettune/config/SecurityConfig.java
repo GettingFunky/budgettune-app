@@ -29,7 +29,11 @@ public class SecurityConfig {
                                 "/login",
                                 "/logo.png",
                                 "/css/**",
-                                "/js/**"
+                                "/js/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Αν χρειαστεί μετά
                         .anyRequest().authenticated()

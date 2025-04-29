@@ -17,6 +17,7 @@ public class TransactionMapper {
         transaction.setType(transactionDTO.getType());
         transaction.setNotes(transactionDTO.getNotes());
         transaction.setMeans(transactionDTO.getMeans());
+        transaction.setCategory(transactionDTO.getCategory());
 
 //        if (transactionDTO.getUserId() != null) {
 //            User user = userRepository.findById(transactionDTO.getUserId())
@@ -52,6 +53,7 @@ public class TransactionMapper {
         dto.setType(transaction.getType());
         dto.setNotes(transaction.getNotes());
         dto.setMeans(transaction.getMeans());
+        dto.setCategory(transaction.getCategory());
 
         if (transaction.getUser() != null) {
             dto.setUserId(transaction.getUser().getId());

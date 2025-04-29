@@ -18,7 +18,11 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Column(length = 50, nullable = false)
     private String description;
+
+    @Column(length = 50, nullable = false)
+    private String category;
 
     @Enumerated(EnumType.STRING)
     private TransactionMeans means;
@@ -107,5 +111,13 @@ public class Transaction {
 
     public void setMeans(TransactionMeans means) {
         this.means = means;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

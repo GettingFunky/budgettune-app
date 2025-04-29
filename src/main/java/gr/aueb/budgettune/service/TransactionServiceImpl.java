@@ -114,7 +114,8 @@ public class TransactionServiceImpl implements TransactionService {
             LocalDate dateFrom,
             LocalDate dateTo,
             String[] types,
-            String[] means) {
+            String[] means,
+            String category) {
 
         User user = getCurrentUser();
         List<Transaction> allTransactions = transactionRepository.findAllByUser(user);
@@ -127,6 +128,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .filter(t -> dateTo == null || !t.getDate().isAfter(dateTo))
                 .filter(t -> types == null || types.length == 0 || containsType(types, t.getType().name()))
                 .filter(t -> means == null || means.length == 0 || containsMeans(means, t.getMeans()))
+                .filter(t -> category == null || t.getCategory().toLowerCase().contains(category.toLowerCase()))
                 .map(TransactionMapper::toDTO)
                 .collect(Collectors.toList());
     }

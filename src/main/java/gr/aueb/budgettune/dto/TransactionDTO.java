@@ -12,8 +12,12 @@ public class TransactionDTO {
     private Long id;
 
     @NotBlank(message = "Η περιγραφή είναι υποχρεωτική")
-    @Size(max = 30, message = "Η περιγραφή δεν πρέπει να ξεπερνά τους 30 χαρακτήρες")
+    @Size(max = 50, message = "Η περιγραφή δεν πρέπει να ξεπερνά τους 50 χαρακτήρες")
     private String description;
+
+    @NotBlank(message = "Η κατηγορία είναι υποχρεωτική")
+    @Size(max = 50, message = "Η κατηγορία δεν πρέπει να ξεπερνά τους 50 χαρακτήρες")
+    private String category;
 
     @NotNull(message = "Το ποσό είναι υποχρεωτικό")
     @DecimalMin(value = "0.01", inclusive = true, message = "Το ποσό πρέπει να είναι μεγαλύτερο από 0")
@@ -97,5 +101,13 @@ public class TransactionDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

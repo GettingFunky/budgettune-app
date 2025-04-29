@@ -27,6 +27,7 @@ public interface TransactionService {
             LocalDate dateFrom,
             LocalDate dateTo,
             String[] types,
-            String[] means
+            String[] means,
+            String category
     );
 }

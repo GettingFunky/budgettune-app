@@ -54,11 +54,12 @@ public class TransactionController {
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate dateTo,
             @RequestParam(required = false) String[] types,
             @RequestParam(required = false) String[] means,
+            @RequestParam(required = false) String category,
             Model model
     ) {
         // ➡️ Πρώτα φέρνουμε τα φιλτραρισμένα Transactions
         List<TransactionDTO> filteredTransactions = transactionService.filterTransactions(
-                description, amountMin, amountMax, dateFrom, dateTo, types, means
+                description, amountMin, amountMax, dateFrom, dateTo, types, means, category
         );
 
         // ➡️ Βάζουμε τα Transactions στο model
@@ -93,9 +94,6 @@ public class TransactionController {
 
         return "transactions-list";
     }
-
-
-
 
     // Εμφάνιση μιας συναλλαγής
     @GetMapping("/{id}")

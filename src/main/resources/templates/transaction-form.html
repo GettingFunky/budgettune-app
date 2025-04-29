@@ -31,6 +31,29 @@
             <div class="text-danger" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
         </div>
 
+
+        <!-- Κρυφό input που πραγματικά στέλνει την τιμή -->
+        <input type="hidden" id="categoryHidden" th:field="*{category}" />
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Κατηγορία</label>
+            <select id="category" class="form-select">
+                <option value="">-- Επιλέξτε --</option>
+                <option value="Φαγητό">Φαγητό</option>
+                <option value="Μεταφορές">Μεταφορές</option>
+                <option value="Ενοίκιο">Ενοίκιο</option>
+                <option value="Διασκέδαση">Διασκέδαση</option>
+                <option value="Υγεία">Υγεία</option>
+                <option value="__custom__">Άλλη κατηγορία...</option>
+            </select>
+        </div>
+
+        <div class="mb-3" id="customCategoryDiv" style="display:none;">
+            <label for="customCategory" class="form-label">Άλλη Κατηγορία</label>
+            <input type="text" id="customCategory" class="form-control" />
+        </div>
+
+
         <div class="mb-3">
             <label for="date" class="form-label">Ημερομηνία</label>
             <input type="date" id="date" name="date" th:value="${transactionDTO.date != null ? transactionDTO.date : ''}"
@@ -75,6 +98,39 @@
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"
 ></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categorySelect = document.getElementById('category');
+        const customCategoryDiv = document.getElementById('customCategoryDiv');
+        const customCategoryInput = document.getElementById('customCategory');
+        const categoryHidden = document.getElementById('categoryHidden');
+        const form = document.querySelector('form');
+
+        categorySelect.addEventListener('change', function () {
+            if (this.value === '__custom__') {
+                customCategoryDiv.style.display = 'block';
+                categoryHidden.value = ''; // Καθαρίζουμε προσωρινά
+            } else {
+                customCategoryDiv.style.display = 'none';
+                categoryHidden.value = this.value; // Αντιγράφουμε την κατηγορία
+            }
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (categorySelect.value === '__custom__') {
+                if (customCategoryInput.value.trim() === '') {
+                    e.preventDefault();
+                    alert("Παρακαλώ συμπληρώστε την κατηγορία.");
+                    customCategoryInput.focus();
+                    return;
+                }
+                categoryHidden.value = customCategoryInput.value.trim(); // Στέλνουμε το custom
+            }
+        });
+    });
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

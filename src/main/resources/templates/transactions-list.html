@@ -59,6 +59,10 @@
                     <input type="number" name="amountMax" step="0.01" class="form-control">
                 </div>
                 <div class="col-md-3">
+                    <label class="form-label">Κατηγορία</label>
+                    <input type="text" name="category" class="form-control">
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">Ημερομηνία Από</label>
                     <input type="date" name="dateFrom" class="form-control">
                 </div>
@@ -105,6 +109,7 @@
             <tr>
                 <th title="Κάντε κλικ για ταξινόμηση">Περιγραφή</th>
                 <th title="Κάντε κλικ για ταξινόμηση">Ποσό</th>
+                <th title="Κάντε κλικ για ταξινόμηση">Κατηγορία</th>
                 <th title="Κάντε κλικ για ταξινόμηση">Ημερομηνία</th>
                 <th title="Κάντε κλικ για ταξινόμηση">Τύπος</th>
                 <th title="Κάντε κλικ για ταξινόμηση">Πηγή</th>
@@ -116,6 +121,7 @@
             <tr th:each="transaction : ${transactions}">
                 <td th:text="${transaction.description}">Περιγραφή</td>
                 <td th:text="${transaction.amount}">0.00</td>
+                <td th:text="${transaction.category}">Κατηγορία</td>
                 <td th:text="${transaction.date}">2025-01-01</td>
                 <td th:text="${transaction.type}">Τύπος</td>
                 <td th:text="${transaction.means}">Πηγή</td>

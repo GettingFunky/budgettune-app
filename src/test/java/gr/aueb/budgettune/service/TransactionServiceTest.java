@@ -98,6 +98,7 @@ class TransactionServiceTest {
         Transaction t1 = new Transaction();
         t1.setId(1L);
         t1.setDescription("Supermarket");
+        t1.setCategory("Supermarket");
         t1.setAmount(new BigDecimal("50.00"));
         t1.setDate(LocalDate.of(2025, 4, 27));
         t1.setType(TransactionType.EXPENSE);
@@ -107,18 +108,21 @@ class TransactionServiceTest {
         Transaction t2 = new Transaction();
         t2.setId(2L);
         t2.setDescription("Salary");
+        t2.setCategory("Salary");
         t2.setAmount(new BigDecimal("1000.00"));
         t2.setDate(LocalDate.of(2025, 4, 25));
         t2.setType(TransactionType.INCOME);
         t2.setMeans(TransactionMeans.CASH);
         t2.setUser(user);
 
+
         when(transactionRepository.findAllByUser(user)).thenReturn(List.of(t1, t2));
 
         List<TransactionDTO> results = transactionService.filterTransactions(
                 "Sal", null, null, null, null,
                 new String[]{"INCOME"},
-                new String[]{"CASH"}
+                new String[]{"CASH"},
+                null
         );
 
         assertEquals(1, results.size());

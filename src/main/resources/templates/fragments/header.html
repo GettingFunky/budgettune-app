@@ -1,14 +1,36 @@
 <!-- templates/fragments/header.html -->
 <header class="navbar navbar-expand-lg shadow" style="background-color: #41807E;" xmlns:th="http://www.w3.org/1999/xhtml">
+    <style>
+        .logo-animated {
+            animation: bounceZoom 4s infinite;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        @keyframes bounceZoom {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            30% {
+                transform: translateY(-4px) scale(1.1);
+            }
+            60% {
+                transform: translateY(0px) scale(0.95);
+            }
+        }
+    </style>
+
     <div class="container-fluid">
+
         <!-- Logo + Όνομα -->
-        <a class="navbar-brand d-flex align-items-center text-white" th:href="${#authorization.expression('isAuthenticated()')} ? '/transactions/list' : '/login'">
-            <img th:src="@{/logo.png}" alt="BudgetTune Logo" height="30" class="me-2">
+        <a class="navbar-brand d-flex align-items-center text-white"
+           th:href="${#authorization.expression('isAuthenticated()')} ? '/transactions/list' : '/login'">
+            <img th:src="@{/logo.png}" alt="BudgetTune Logo" height="30" class="me-2 logo-animated">
             <span class="fw-bold">BudgetTune</span>
         </a>
 
         <!-- Burger Menu -->
-        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -16,7 +38,7 @@
         <!-- Menu -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <div th:if="${#authorization.expression('isAuthenticated()')}" class="d-flex align-items-center gap-2">
-                <a class="btn btn-light rounded-pill" th:href="@{/transactions/create}" title="Νέα Συναλλαγή">➕</a>
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/create}" title="Νέα Συναλλαγή">➕</a>
                 <a class="btn btn-light rounded-pill" th:href="@{/transactions/list}" title="Λίστα Συναλλαγών">📄</a>
                 <span class="navbar-text text-white fw-light" th:text="'👤 ' + ${#authentication.name}">Χρήστης</span>
                 <a class="btn btn-outline-light rounded-pill" th:href="@{/logout}" title="Αποσύνδεση">🚪</a>

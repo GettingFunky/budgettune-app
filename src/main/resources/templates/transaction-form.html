@@ -12,7 +12,7 @@
 ></div>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Καταχώρηση Συναλλαγής</h2>
+    <h2 class="mb-4">✏️ Καταχώρηση Συναλλαγής</h2>
 
     <form th:action="@{${transactionDTO.id} == null ? '/transactions/create' : '/transactions/' + ${transactionDTO.id} + '/edit'}"
           th:object="${transactionDTO}" method="post" class="card p-4 shadow-sm">
@@ -35,61 +35,67 @@
         <!-- Κρυφό input που πραγματικά στέλνει την τιμή -->
         <input type="hidden" id="categoryHidden" th:field="*{category}" />
 
-        <div class="mb-3">
-            <label for="category" class="form-label">Κατηγορία</label>
-            <select id="category" class="form-select">
-                <option value="">-- Επιλέξτε --</option>
-                <option value="Φαγητό">Φαγητό</option>
-                <option value="Μεταφορές">Μεταφορές</option>
-                <option value="Ενοίκιο">Ενοίκιο</option>
-                <option value="Διασκέδαση">Διασκέδαση</option>
-                <option value="Υγεία">Υγεία</option>
-                <option value="__custom__">Άλλη κατηγορία...</option>
-            </select>
+        <div class="mb-3 d-flex flex-wrap align-items-end gap-3"> <!-- Προσθήκη flex container -->
+            <div class="flex-grow-1"> <!-- Το πρώτο select να παίρνει τον διαθέσιμο χώρο -->
+                <label for="category" class="form-label">Κατηγορία</label>
+                <select id="category" class="form-select">
+                    <option value="">-- Επιλέξτε --</option>
+                    <option value="Φαγητό">🍽️ Φαγητό</option>
+                    <option value="Μεταφορές">🚗 Μεταφορές</option>
+                    <option value="Ενοίκιο">🏠 Ενοίκιο</option>
+                    <option value="Διασκέδαση">🎉 Διασκέδαση</option>
+                    <option value="Υγεία">🏥 Υγεία</option>
+                    <option value="Μισθός">💼 Μισθός</option>
+                    <option value="Επικοινωνίες">📞 Επικοινωνίες</option>
+                    <option value="Δώρα">🎁 Δώρα</option>
+                    <option value="__custom__">✨ Άλλη κατηγορία...</option>
+                </select>
+            </div>
+
+            <div id="customCategoryDiv" style="display:none; flex-basis: 0; flex-grow: 1;"> <!-- Ισομερής κατανομή χώρου -->
+                <label for="customCategory" class="form-label">✏️ Εισάγετε κατηγορία:</label>
+                <input type="text" id="customCategory" class="form-control" />
+            </div>
         </div>
 
-        <div class="mb-3" id="customCategoryDiv" style="display:none;">
-            <label for="customCategory" class="form-label">Άλλη Κατηγορία</label>
-            <input type="text" id="customCategory" class="form-control" />
-        </div>
 
 
         <div class="mb-3">
-            <label for="date" class="form-label">Ημερομηνία</label>
+            <label for="date" class="form-label">📅 Ημερομηνία</label>
             <input type="date" id="date" name="date" th:value="${transactionDTO.date != null ? transactionDTO.date : ''}"
                    class="form-control" required>
             <div class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="type" class="form-label">Τύπος Συναλλαγής</label>
+            <label for="type" class="form-label">🔘 Τύπος Συναλλαγής</label>
             <select id="type" th:field="*{type}" class="form-select" required>
                 <option value="" selected>-- Επιλέξτε τύπο --</option>
-                <option th:value="INCOME">Έσοδο</option>
-                <option th:value="EXPENSE">Έξοδο</option>
+                <option th:value="INCOME">💰 Έσοδο</option>
+                <option th:value="EXPENSE">💸 Έξοδο</option>
             </select>
             <div class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="notes" class="form-label">Σημειώσεις</label>
+            <label for="notes" class="form-label">📝 Σημειώσεις</label>
             <input type="text" id="notes" th:field="*{notes}" class="form-control">
             <div class="text-danger" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="means" class="form-label">Πηγή</label>
+            <label for="means" class="form-label">💳 Πηγή</label>
             <select id="means" th:field="*{means}" class="form-select">
                 <option value="" selected hidden>Επιλέξτε τύπο...</option>
-                <option th:value="CASH">Μετρητά</option>
-                <option th:value="CARD">Κάρτα</option>
-                <option th:value="OTHER">Άλλο</option>
+                <option th:value="CASH">💵 Μετρητά</option>
+                <option th:value="CARD">💳 Κάρτα</option>
+                <option th:value="OTHER">❓ Άλλο</option>
             </select>
             <div class="text-danger" th:if="${#fields.hasErrors('means')}" th:errors="*{means}"></div>
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+            <button type="submit" class="btn btn-primary">💾 Αποθήκευση</button>
         </div>
 
     </form>
@@ -130,7 +136,6 @@
     });
 </script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html>`

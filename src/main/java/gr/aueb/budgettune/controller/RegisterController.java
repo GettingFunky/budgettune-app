@@ -29,7 +29,9 @@ public class RegisterController {
 
     @PostMapping
     public String registerUser(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
-                               BindingResult bindingResult, Model model) {
+                               BindingResult bindingResult,
+                               @RequestParam("confirmPassword") String confirmPassword,
+                               Model model) {
 
         if (bindingResult.hasErrors()) {
             return "register-form";
@@ -39,6 +41,12 @@ public class RegisterController {
             model.addAttribute("registrationError", "Το όνομα χρήστη χρησιμοποιείται ήδη");
             return "register-form";
         }
+
+        if (!userDTO.getPassword().equals(confirmPassword)) {
+            model.addAttribute("registrationError", "Οι κωδικοί δεν ταιριάζουν");
+            return "register-form";
+        }
+
 
         userService.register(userDTO);
 

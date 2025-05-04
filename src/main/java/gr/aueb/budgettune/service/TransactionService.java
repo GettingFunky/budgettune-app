@@ -34,4 +34,7 @@ public interface TransactionService {
 
     TransactionSummaryDTO calculateSummary(List<TransactionDTO> transactions);
 
+    TransactionSummaryDTO calculateSummaryByUsername(String username);
+
+
 }

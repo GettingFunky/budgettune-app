@@ -30,6 +30,20 @@
     </div>
 </div>
 
+<div class="card mt-5 shadow-sm p-4">
+    <h4 class="mb-3">📈 Στατιστικά Snapshot</h4>
+    <p><strong>📋 Συνολικές Συναλλαγές:</strong> <span th:text="${summary.totalTransactions}">0</span></p>
+    <p><strong>💰 Συνολικά Έσοδα:</strong> <span th:text="${summary.totalIncome}">0</span> €</p>
+    <p><strong>💸 Συνολικά Έξοδα:</strong> <span th:text="${summary.totalExpense}">0</span> €</p>
+    <p class="mb-0">
+        <strong>⚖️ Υπόλοιπο:</strong>
+        <span th:text="${summary.balance}"
+              th:style="${summary.balance < 0} ? 'color: red; font-weight: bold;' : 'font-weight: bold;'">0</span> €
+    </p>
+</div>
+
+
+
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

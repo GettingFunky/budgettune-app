@@ -173,4 +173,28 @@ public class TransactionServiceImpl implements TransactionService {
         return new TransactionSummaryDTO(totalIncome, totalExpense, balance, totalTransactions);
     }
 
+    @Override
+    public TransactionSummaryDTO calculateSummaryByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+
+        BigDecimal totalIncome = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalExpense = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal balance = totalIncome.subtract(totalExpense);
+        int totalTransactions = transactions.size();
+
+        return new TransactionSummaryDTO(totalIncome, totalExpense, balance, totalTransactions);
+    }
+
+
 }

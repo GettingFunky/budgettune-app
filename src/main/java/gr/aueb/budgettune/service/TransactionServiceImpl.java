@@ -1,9 +1,11 @@
 package gr.aueb.budgettune.service;
 
 import gr.aueb.budgettune.dto.TransactionDTO;
+import gr.aueb.budgettune.dto.TransactionSummaryDTO;
 import gr.aueb.budgettune.exception.TransactionNotFoundException;
 import gr.aueb.budgettune.mapper.TransactionMapper;
 import gr.aueb.budgettune.model.Transaction;
+import gr.aueb.budgettune.model.TransactionType;
 import gr.aueb.budgettune.model.User;
 import gr.aueb.budgettune.repository.TransactionRepository;
 import gr.aueb.budgettune.repository.UserRepository;
@@ -12,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -151,4 +154,23 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return false;
     }
+
+    @Override
+    public TransactionSummaryDTO calculateSummary(List<TransactionDTO> transactions) {
+        BigDecimal totalIncome = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .map(TransactionDTO::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalExpense = transactions.stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .map(TransactionDTO::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal balance = totalIncome.subtract(totalExpense);
+        int totalTransactions = transactions.size();
+
+        return new TransactionSummaryDTO(totalIncome, totalExpense, balance, totalTransactions);
+    }
+
 }

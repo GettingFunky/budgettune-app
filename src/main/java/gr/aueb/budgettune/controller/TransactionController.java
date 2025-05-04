@@ -1,6 +1,7 @@
 package gr.aueb.budgettune.controller;
 
 import gr.aueb.budgettune.dto.TransactionDTO;
+import gr.aueb.budgettune.dto.TransactionSummaryDTO;
 import gr.aueb.budgettune.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,33 +66,8 @@ public class TransactionController {
         // ➡️ Βάζουμε τα Transactions στο model
         model.addAttribute("transactions", filteredTransactions);
 
-        // ➡️ Υπολογίζουμε Στατιστικά
-        model.addAttribute("totalTransactions", filteredTransactions.size());
-
-        model.addAttribute("totalIncome", filteredTransactions.stream()
-                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.INCOME)
-                .map(TransactionDTO::getAmount)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
-
-        model.addAttribute("totalExpense", filteredTransactions.stream()
-                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.EXPENSE)
-                .map(TransactionDTO::getAmount)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
-
-        // Πάρε τα ήδη υπολογισμένα συνολικά
-        java.math.BigDecimal totalIncome = filteredTransactions.stream()
-                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.INCOME)
-                .map(TransactionDTO::getAmount)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
-
-        java.math.BigDecimal totalExpense = filteredTransactions.stream()
-                .filter(t -> t.getType() == gr.aueb.budgettune.model.TransactionType.EXPENSE)
-                .map(TransactionDTO::getAmount)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
-
-// Βάλε το balance στο Model
-        model.addAttribute("balance", totalIncome.subtract(totalExpense));
-
+        TransactionSummaryDTO summary = transactionService.calculateSummary(filteredTransactions);
+        model.addAttribute("summary", summary);
         return "transactions-list";
     }
 

@@ -136,13 +136,14 @@
 
     <div class="card mt-4 p-3 shadow-sm text-center">
         <div class="card-body">
-            <p><strong>📊 Σύνολο Συναλλαγών: </strong> <span th:text="${totalTransactions}">0</span></p>
-            <p><strong>💰 Συνολικά Έσοδα: </strong> <span th:text="${totalIncome}">0</span> €</p>
-            <p><strong>💸 Συνολικά Έξοδα: </strong> <span th:text="${totalExpense}">0</span> €</p>
+            <p><strong>📊 Σύνολο Συναλλαγών: </strong> <span th:text="${summary.totalTransactions}">0</span></p>
+            <p><strong>💰 Συνολικά Έσοδα: </strong> <span th:text="${summary.totalIncome}">0</span> €</p>
+            <p><strong>💸 Συνολικά Έξοδα: </strong> <span th:text="${summary.totalExpense}">0</span> €</p>
             <p class="mb-0"><strong>⚖️ Καθαρό Υπόλοιπο: </strong>
-                <span th:text="${balance}"
-                      th:style="${balance < 0} ? 'color: red; font-weight: bold;' : 'font-weight: bold'">0</span> €
+                <span th:text="${summary.balance}"
+                      th:style="${summary.balance < 0} ? 'color: red; font-weight: bold;' : 'font-weight: bold'">0</span> €
             </p>
+
         </div>
     </div>
 </div>

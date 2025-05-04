@@ -1,6 +1,7 @@
 package gr.aueb.budgettune.service;
 
 import gr.aueb.budgettune.dto.TransactionDTO;
+import gr.aueb.budgettune.dto.TransactionSummaryDTO;
 import gr.aueb.budgettune.model.User;
 
 import java.time.LocalDate;
@@ -30,4 +31,7 @@ public interface TransactionService {
             String[] means,
             String category
     );
+
+    TransactionSummaryDTO calculateSummary(List<TransactionDTO> transactions);
+
 }

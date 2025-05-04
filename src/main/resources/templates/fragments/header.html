@@ -43,11 +43,13 @@
         <!-- Menu -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <div th:if="${#authorization.expression('isAuthenticated()')}" class="d-flex align-items-center gap-2">
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/dashboard}" title="Αρχική / Dashboard">🏠</a>
                 <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/create}" title="Νέα Συναλλαγή">➕</a>
                 <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/list}" title="Λίστα Συναλλαγών">📄</a>
                 <span class="navbar-text text-white fw-light" th:text="'👤 ' + ${#authentication.name}">Χρήστης</span>
                 <a class="btn btn-outline-light rounded-pill logo-animated" th:href="@{/logout}" title="Αποσύνδεση">🚪</a>
             </div>
+
         </div>
     </div>
 </header>

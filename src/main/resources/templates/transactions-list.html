@@ -29,11 +29,11 @@
         }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100 bg-light">
 
 <div th:replace="~{fragments/header :: header}"></div>
-
-<div class="container my-5">
+<div class="flex-grow-1">
+<div class="container my-5 text-center">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-4">📋 Λίστα Συναλλαγών</h2>
         <a th:href="@{/transactions/create}" class="btn btn-success logo-animated">➕ Νέα Συναλλαγή</a>
@@ -146,6 +146,7 @@
 
         </div>
     </div>
+</div>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

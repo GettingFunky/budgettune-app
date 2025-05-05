@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -195,6 +197,49 @@ public class TransactionServiceImpl implements TransactionService {
 
         return new TransactionSummaryDTO(totalIncome, totalExpense, balance, totalTransactions);
     }
+
+    @Override
+    public Map<String, BigDecimal> getMonthlyTotalByType(String username, String type) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+
+        return transactions.stream()
+                .filter(t -> t.getType().name().equalsIgnoreCase(type))
+                .collect(Collectors.groupingBy(
+                        t -> t.getDate().getMonth().getValue(), // 1, 2, ..., 12
+                        Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
+                ))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        e -> monthName(e.getKey()), // e.g. 1 -> "Ιαν"
+                        Map.Entry::getValue,
+                        (v1, v2) -> v1,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private String monthName(int month) {
+        return switch (month) {
+            case 1 -> "Ιαν";
+            case 2 -> "Φεβ";
+            case 3 -> "Μαρ";
+            case 4 -> "Απρ";
+            case 5 -> "Μάι";
+            case 6 -> "Ιουν";
+            case 7 -> "Ιουλ";
+            case 8 -> "Αυγ";
+            case 9 -> "Σεπ";
+            case 10 -> "Οκτ";
+            case 11 -> "Νοε";
+            case 12 -> "Δεκ";
+            default -> "";
+        };
+    }
+
 
 
 }

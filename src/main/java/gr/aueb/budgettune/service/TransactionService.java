@@ -4,8 +4,10 @@ import gr.aueb.budgettune.dto.TransactionDTO;
 import gr.aueb.budgettune.dto.TransactionSummaryDTO;
 import gr.aueb.budgettune.model.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface TransactionService {
 
@@ -35,6 +37,8 @@ public interface TransactionService {
     TransactionSummaryDTO calculateSummary(List<TransactionDTO> transactions);
 
     TransactionSummaryDTO calculateSummaryByUsername(String username);
+
+    Map<String, BigDecimal> getMonthlyTotalByType(String username, String type);
 
 
 }

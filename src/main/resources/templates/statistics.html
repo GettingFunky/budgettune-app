@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>📊 Στατιστικά | BudgetTune</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">📊 Στατιστικά Συναλλαγών</h2>
+
+    <div class="card shadow-sm p-4">
+        <h5 class="card-title text-center mb-4">Έσοδα και Έξοδα ανά Μήνα</h5>
+        <canvas id="lineChart" height="100"></canvas>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    const incomePerMonth = /*[[${incomePerMonth}]]*/ {};
+    const expensePerMonth = /*[[${expensePerMonth}]]*/ {};
+
+    const labels = Object.keys(incomePerMonth); // ["Ιαν", "Φεβ", ...]
+    const incomeData = Object.values(incomePerMonth); // [1200, 950, ...]
+    const expenseData = Object.values(expensePerMonth); // [800, 700, ...]
+
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '💰 Έσοδα',
+                    data: incomeData,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0,128,0,0.2)',
+                    tension: 0.3
+                },
+                {
+                    label: '💸 Έξοδα',
+                    data: expenseData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

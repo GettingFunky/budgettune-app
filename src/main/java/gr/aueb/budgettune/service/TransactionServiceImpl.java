@@ -205,22 +205,23 @@ public class TransactionServiceImpl implements TransactionService {
 
         List<Transaction> transactions = transactionRepository.findAllByUser(user);
 
-        return transactions.stream()
+        // Αρχικά, συγκέντρωση ανά μήνα με ποσά
+        Map<Integer, BigDecimal> totals = transactions.stream()
                 .filter(t -> t.getType().name().equalsIgnoreCase(type))
                 .collect(Collectors.groupingBy(
-                        t -> t.getDate().getMonth().getValue(), // 1, 2, ..., 12
+                        t -> t.getDate().getMonth().getValue(),
                         Collectors.mapping(Transaction::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
-                ))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(
-                        e -> monthName(e.getKey()), // e.g. 1 -> "Ιαν"
-                        Map.Entry::getValue,
-                        (v1, v2) -> v1,
-                        LinkedHashMap::new
                 ));
+
+        // Επιστροφή map με ΟΛΟΥΣ τους μήνες, ακόμα και αν δεν υπάρχουν δεδομένα
+        Map<String, BigDecimal> result = new LinkedHashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            result.put(monthName(month), totals.getOrDefault(month, BigDecimal.ZERO));
+        }
+
+        return result;
     }
+
 
     private String monthName(int month) {
         return switch (month) {

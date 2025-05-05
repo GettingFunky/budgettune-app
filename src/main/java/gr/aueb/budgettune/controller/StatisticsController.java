@@ -27,9 +27,11 @@ public class StatisticsController {
 
         Map<String, BigDecimal> incomePerMonth = transactionService.getMonthlyTotalByType(username, "INCOME");
         Map<String, BigDecimal> expensePerMonth = transactionService.getMonthlyTotalByType(username, "EXPENSE");
+        Map<String, BigDecimal> expenseByCategory = transactionService.getExpenseTotalByCategory(username);
 
         model.addAttribute("incomePerMonth", incomePerMonth);
         model.addAttribute("expensePerMonth", expensePerMonth);
+        model.addAttribute("expenseByCategory", expenseByCategory);
 
         return "statistics";
     }

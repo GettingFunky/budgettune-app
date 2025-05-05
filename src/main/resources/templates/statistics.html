@@ -14,9 +14,16 @@
 <div class="container my-5">
     <h2 class="mb-4 text-center">📊 Στατιστικά Συναλλαγών</h2>
 
-    <div class="card shadow-sm p-4">
+    <!-- Line Chart -->
+    <div class="card shadow-sm p-4 mb-5">
         <h5 class="card-title text-center mb-4">Έσοδα και Έξοδα ανά Μήνα</h5>
         <canvas id="lineChart" height="100"></canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="card shadow-sm p-4">
+        <h5 class="card-title text-center mb-4">Κατανομή Εξόδων ανά Κατηγορία</h5>
+        <canvas id="pieChart" height="100"></canvas>
     </div>
 </div>
 
@@ -24,12 +31,15 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:inline="javascript">
+    // Data from controller
     const incomePerMonth = /*[[${incomePerMonth}]]*/ {};
     const expensePerMonth = /*[[${expensePerMonth}]]*/ {};
+    const expenseByCategory = /*[[${expenseByCategory}]]*/ {};
 
-    const labels = Object.keys(incomePerMonth); // ["Ιαν", "Φεβ", ...]
-    const incomeData = Object.values(incomePerMonth); // [1200, 950, ...]
-    const expenseData = Object.values(expensePerMonth); // [800, 700, ...]
+    // Line chart data
+    const labels = Object.keys(incomePerMonth);
+    const incomeData = Object.values(incomePerMonth);
+    const expenseData = Object.values(expensePerMonth);
 
     const ctx = document.getElementById('lineChart').getContext('2d');
     new Chart(ctx, {
@@ -56,12 +66,36 @@
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'top'
-                },
-                title: {
-                    display: false
-                }
+                legend: { position: 'top' },
+                title: { display: false }
+            }
+        }
+    });
+
+    // Pie chart data
+    const pieLabels = Object.keys(expenseByCategory);
+    const pieData = Object.values(expenseByCategory);
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                label: 'Έξοδα ανά Κατηγορία',
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#A569BD',
+                    '#F39C12', '#1ABC9C', '#E74C3C', '#2ECC71'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: false }
             }
         }
     });

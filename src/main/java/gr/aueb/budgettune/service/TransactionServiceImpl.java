@@ -240,6 +240,23 @@ public class TransactionServiceImpl implements TransactionService {
         };
     }
 
+    @Override
+    public Map<String, BigDecimal> getExpenseTotalByCategory(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+
+        return transactions.stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .collect(Collectors.groupingBy(
+                        Transaction::getCategory,
+                        Collectors.mapping(Transaction::getAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
+                ));
+    }
+
+
 
 
 }

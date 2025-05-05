@@ -40,5 +40,8 @@ public interface TransactionService {
 
     Map<String, BigDecimal> getMonthlyTotalByType(String username, String type);
 
+    Map<String, BigDecimal> getExpenseTotalByCategory(String username);
+
+
 
 }

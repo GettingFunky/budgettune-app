@@ -9,5 +9,7 @@ public interface UserService {
 
     boolean changePassword(String username, String currentPassword, String newPassword);
 
+    void deleteUser(String username);
+
 }
 

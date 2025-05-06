@@ -45,6 +45,10 @@
                     Η εγγραφή ολοκληρώθηκε! Μπορείτε να συνδεθείτε.
                 </div>
 
+                <div th:if="${param.deleted}" class="alert alert-info text-center">
+                    Ο λογαριασμός σου διαγράφηκε με επιτυχία.
+                </div>
+
                 <div class="text-center small">
                     Δεν έχεις λογαριασμό; <a th:href="@{/register}">Εγγραφή</a>
                 </div>

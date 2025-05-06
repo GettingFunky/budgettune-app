@@ -4,6 +4,7 @@ import gr.aueb.budgettune.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,5 +46,16 @@ public class UserSettingsController {
         model.addAttribute("success", "Ο κωδικός ενημερώθηκε με επιτυχία.");
         return "profile";
     }
+
+    @PostMapping("/profile/delete")
+    public String deleteAccount(Authentication authentication) {
+        String username = authentication.getName();
+        userService.deleteUser(username);
+
+        // Αποσύνδεση μετά τη διαγραφή
+        SecurityContextHolder.clearContext();
+        return "redirect:/login?deleted";
+    }
+
 }
 

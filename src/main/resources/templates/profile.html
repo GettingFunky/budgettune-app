@@ -50,9 +50,16 @@
 
             <!-- Κουμπί -->
             <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-danger mb-4">Αλλαγή Κωδικού</button>
+                <button type="submit" class="btn btn-success mb-4">Αλλαγή Κωδικού</button>
             </div>
         </form>
+
+        <div class="text-center mt-4">
+            <form th:action="@{/profile/delete}" method="post" onsubmit="return confirm('Είσαι σίγουρος ότι θέλεις να διαγράψεις τον λογαριασμό σου; Αυτή η ενέργεια είναι μη αναστρέψιμη.');">
+                <button type="submit" class="btn btn-danger">🗑️ Διαγραφή Λογαριασμού</button>
+                <span class="text-danger"> Προσοχή, μη αναστρέψιμη ενέργεια, όλα σας τα δεδομένα θα χαθούν!!! </span>
+            </form>
+        </div>
 
         <div class="w-100 text-center">
             <a th:href="@{/dashboard}" class="btn btn-secondary btn-lg py-3 mt-4" title="Επιστροφή στο dashboard"

@@ -14,27 +14,29 @@
     <div class="container mt-5">
         <h2 class="mb-4 text-center">⚙ Ρυθμίσεις Χρήστη</h2>
 
+        <!-- Φόρμα αλλαγής κωδικού -->
         <form th:action="@{/profile}" method="post" class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+            <h5 class="mb-3 text-center">🔑 Αλλαγή Κωδικού</h5>
 
-            <!-- Όνομα χρήστη (read-only) -->
+            <!-- Όνομα Χρήστη -->
             <div class="mb-3">
                 <label for="username" class="form-label">Όνομα Χρήστη</label>
-                <input type="text" id="username" th:value="${#authentication.name}" class="form-control" disabled readonly>
+                <input type="text" id="username" th:value="${#authentication.name}" class="form-control bg-light" disabled readonly>
             </div>
 
-            <!-- Τρέχων κωδικός -->
+            <!-- Τρέχων Κωδικός -->
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">Τρέχων Κωδικός</label>
                 <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
             </div>
 
-            <!-- Νέος κωδικός -->
+            <!-- Νέος Κωδικός -->
             <div class="mb-3">
                 <label for="newPassword" class="form-label">Νέος Κωδικός</label>
                 <input type="password" id="newPassword" name="newPassword" class="form-control" required>
             </div>
 
-            <!-- Επιβεβαίωση -->
+            <!-- Επιβεβαίωση Νέου Κωδικού -->
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Επιβεβαίωση Νέου Κωδικού</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
@@ -48,21 +50,39 @@
                 <p th:text="${success}"></p>
             </div>
 
-            <!-- Κουμπί -->
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-success mb-4">Αλλαγή Κωδικού</button>
+            <!-- Κουμπί αλλαγής -->
+            <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-success">Αλλαγή Κωδικού</button>
             </div>
         </form>
 
-        <div class="text-center mt-4">
-            <form th:action="@{/profile/delete}" method="post" onsubmit="return confirm('Είσαι σίγουρος ότι θέλεις να διαγράψεις τον λογαριασμό σου; Αυτή η ενέργεια είναι μη αναστρέψιμη.');">
-                <button type="submit" class="btn btn-danger">🗑️ Διαγραφή Λογαριασμού</button>
-                <span class="text-danger"> Προσοχή, μη αναστρέψιμη ενέργεια, όλα σας τα δεδομένα θα χαθούν!!! </span>
-            </form>
-        </div>
+        <!-- Φόρμα διαγραφής -->
+        <form th:action="@{/profile/delete}" method="post"
+              class="card p-4 shadow-sm mx-auto mt-4 text-center border border-danger"
+              style="max-width: 500px;">
+            <h5 class="mb-3 text-center text-danger">🗑️ Διαγραφή Λογαριασμού</h5>
 
+            <div class="mb-3">
+                <label for="deletePassword" class="form-label">Εισάγετε τον κωδικό σας για επιβεβαίωση</label>
+                <input type="password" id="deletePassword" name="deletePassword" class="form-control" required>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('Είσαι σίγουρος/η ότι θέλεις να διαγράψεις τον λογαριασμό σου;\n\n⚠️ ΠΡΟΣΟΧΗ: Αυτή η ενέργεια είναι ΜΗ ΑΝΑΣΤΡΕΨΙΜΗ!');">
+                    Διαγραφή Λογαριασμού
+                </button>
+            </div>
+
+            <div th:if="${deleteError}" class="alert alert-danger text-center mt-3 small">
+                <p th:text="${deleteError}"></p>
+            </div>
+        </form>
+
+
+        <!-- Επιστροφή -->
         <div class="w-100 text-center">
-            <a th:href="@{/dashboard}" class="btn btn-secondary btn-lg py-3 mt-4" title="Επιστροφή στο dashboard"
+            <a th:href="@{/dashboard}" class="btn btn-secondary btn-lg py-3 mt-3" title="Επιστροφή στο dashboard"
                style="background-color: #41807E; color: white;">🏠 Επιστροφή στο Dashboard</a>
         </div>
     </div>

@@ -11,5 +11,7 @@ public interface UserService {
 
     void deleteUser(String username);
 
+    boolean checkPassword(String username, String rawPassword);
+
 }
 

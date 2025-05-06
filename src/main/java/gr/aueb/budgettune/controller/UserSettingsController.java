@@ -48,14 +48,24 @@ public class UserSettingsController {
     }
 
     @PostMapping("/profile/delete")
-    public String deleteAccount(Authentication authentication) {
+    public String deleteAccount(@RequestParam("deletePassword") String deletePassword,
+                                Authentication authentication,
+                                Model model) {
         String username = authentication.getName();
-        userService.deleteUser(username);
 
-        // Αποσύνδεση μετά τη διαγραφή
-        SecurityContextHolder.clearContext();
+        // Επιβεβαίωση κωδικού πριν διαγραφή
+        boolean valid = userService.checkPassword(username, deletePassword);
+        if (!valid) {
+            model.addAttribute("deleteError", "Ο κωδικός είναι λανθασμένος. Η διαγραφή ακυρώθηκε.");
+            return "profile";
+        }
+
+        userService.deleteUser(username);
+        SecurityContextHolder.clearContext(); // Αποσύνδεση
+
         return "redirect:/login?deleted";
     }
+
 
 }
 

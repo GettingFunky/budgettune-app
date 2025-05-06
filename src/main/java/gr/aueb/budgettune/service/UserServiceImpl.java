@@ -52,4 +52,11 @@ public class UserServiceImpl implements UserService {
         userRepository.findByUsername(username).ifPresent(userRepository::delete);
     }
 
+    @Override
+    public boolean checkPassword(String username, String rawPassword) {
+        return userRepository.findByUsername(username)
+                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+                .orElse(false);
+    }
+
 }

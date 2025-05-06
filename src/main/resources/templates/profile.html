@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>⚙ Ρυθμίσεις Χρήστη | BudgetTune</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">⚙ Ρυθμίσεις Χρήστη</h2>
+
+    <form th:action="@{/profile}" method="post" class="card p-4 shadow-sm">
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Όνομα Χρήστη</label>
+            <input type="text" id="username" th:value="${#authentication.name}" class="form-control" disabled readonly>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="currentPassword" class="form-label">Τρέχων Κωδικός</label>
+            <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="newPassword" class="form-label">Νέος Κωδικός</label>
+            <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Επιβεβαίωση Νέου Κωδικού</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger text-center">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success text-center">
+            <p th:text="${success}"></p>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Αλλαγή Κωδικού</button>
+        </div>
+    </form>
+
+
+    <div class="w-100 text-center">
+    <a th:href="@{/dashboard}" class="btn btn-secondary btn-lg py-3" title="Επιστροφή στο dashboard"
+       style="background-color: #41807E; color: white;">🏠 Επιστροφή στο Dashboard</a>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    const incomePerMonth = /*[[${incomePerMonth}]]*/ {};
+    const expensePerMonth = /*[[${expensePerMonth}]]*/ {};
+    const expenseByCategory = /*[[${expenseByCategory}]]*/ {};
+
+    const labels = Object.keys(incomePerMonth);
+    const incomeData = Object.values(incomePerMonth);
+    const expenseData = Object.values(expensePerMonth);
+
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Έσοδα',
+                    data: incomeData,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0,128,0,0.2)',
+                    tension: 0.3
+                },
+                {
+                    label: 'Έξοδα',
+                    data: expenseData,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 10
+                    }
+                },
+                title: {
+                    display: false
+                }
+            },
+            layout: {
+                padding: 10
+            }
+        }
+    });
+
+    const pieLabels = Object.keys(expenseByCategory);
+    const pieData = Object.values(expenseByCategory);
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                label: 'Έξοδα ανά Κατηγορία',
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#A569BD',
+                    '#F39C12', '#1ABC9C', '#E74C3C', '#2ECC71'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: false }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

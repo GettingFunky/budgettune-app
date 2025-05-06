@@ -6,4 +6,8 @@ public interface UserService {
     void register(UserDTO userDTO);
 
     boolean existsByUsername(String username);
+
+    boolean changePassword(String username, String currentPassword, String newPassword);
+
 }
+

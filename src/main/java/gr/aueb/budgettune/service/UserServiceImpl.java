@@ -32,4 +32,19 @@ public class UserServiceImpl implements UserService {
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
+
+    @Override
+    public boolean changePassword(String username, String currentPassword, String newPassword) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) return false;
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
+    }
+
 }

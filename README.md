@@ -1,6 +1,7 @@
 # BudgetTune - Personal Finance Tracker
 
 ![BudgetTune Logo](/src/main/resources/static/logomain.png)
+![BudgetTune Preview](/src/main/resources/static/previewwmain.gif)
 
 **BudgetTune** is a full-stack web application for managing personal finances. Users can record, update, filter, and delete their income and expenses in an organized and intuitive interface.
 

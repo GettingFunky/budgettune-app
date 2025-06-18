@@ -39,17 +39,17 @@
         <div class="mb-3 d-flex flex-wrap align-items-end gap-3"> <!-- Προσθήκη flex container -->
             <div class="flex-grow-1"> <!-- Το πρώτο select να παίρνει τον διαθέσιμο χώρο -->
                 <label for="category" class="form-label">Κατηγορία</label>
-                <select id="category" class="form-select">
+                <select id="category" th:field="*{category}" class="form-select">
                     <option value="">-- Επιλέξτε --</option>
-                    <option value="Φαγητό">🍽️ Φαγητό</option>
-                    <option value="Μεταφορές">🚗 Μεταφορές</option>
-                    <option value="Ενοίκιο">🏠 Ενοίκιο</option>
-                    <option value="Διασκέδαση">🎉 Διασκέδαση</option>
-                    <option value="Υγεία">🏥 Υγεία</option>
-                    <option value="Μισθός">💼 Μισθός</option>
-                    <option value="Επικοινωνίες">📞 Επικοινωνίες</option>
-                    <option value="Δώρα">🎁 Δώρα</option>
-                    <option value="__custom__">✨ Άλλη κατηγορία...</option>
+                    <option th:value="Φαγητό">🍽️ Φαγητό</option>
+                    <option th:value="Μεταφορές">🚗 Μεταφορές</option>
+                    <option th:value="Ενοίκιο">🏠 Ενοίκιο</option>
+                    <option th:value="Διασκέδαση">🎉 Διασκέδαση</option>
+                    <option th:value="Υγεία">🏥 Υγεία</option>
+                    <option th:value="Μισθός">💼 Μισθός</option>
+                    <option th:value="Επικοινωνίες">📞 Επικοινωνίες</option>
+                    <option th:value="Δώρα">🎁 Δώρα</option>
+                    <option th:value="__custom__">✨ Άλλη κατηγορία...</option>
                 </select>
             </div>
 

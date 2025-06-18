@@ -120,8 +120,11 @@
                 <td th:text="${transaction.amount}">0.00</td>
                 <td th:text="${transaction.category}">Κατηγορία</td>
                 <td th:text="${transaction.date}">2025-01-01</td>
-                <td th:text="${transaction.type}">Τύπος</td>
-                <td th:text="${transaction.means}">Πηγή</td>
+                <td th:text="${transaction.type != null and transaction.type.name() == 'INCOME' ? 'Έσοδο' : 'Έξοδο'}"></td>
+                <td th:text="${transaction.means != null ?
+              (transaction.means.name() == 'CASH' ? 'Μετρητά' :
+               (transaction.means.name() == 'CARD' ? 'Κάρτα' : 'Άλλο')) : 'Άγνωστο'}"></td>
+
                 <td th:text="${transaction.notes}">Σημειώσεις</td>
                 <td>
                     <a th:href="@{/transactions/{id}/edit(id=${transaction.id})}" class="btn btn-sm btn-warning logo-animated">✏️</a>

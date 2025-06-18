@@ -45,7 +45,7 @@ public class UserSettingsController {
         boolean success = userService.changePassword(authentication.getName(), currentPassword, newPassword);
 
         if (!success) {
-            model.addAttribute("error", "Ο τρέχων κωδικός είναι λάθος ή δεν βρέθηκε ο χρήστης.");
+            model.addAttribute("error", "Ο τρέχων κωδικός είναι λάθος.");
             return "profile";
         }
 

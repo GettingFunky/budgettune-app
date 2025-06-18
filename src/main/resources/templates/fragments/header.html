@@ -43,16 +43,39 @@
         <!-- Menu -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <div th:if="${#authorization.expression('isAuthenticated()')}" class="d-flex align-items-center gap-2">
-                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/dashboard}" title="Αρχική / Dashboard">🏠</a>
-                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/create}" title="Νέα Συναλλαγή">➕</a>
-                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/list}" title="Λίστα Συναλλαγών">📄</a>
-                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/statistics}" title="Στατιστικά">📊</a>
-                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/profile}" title="Ρυθμίσεις Χρήστη">⚙</a>
-                <span class="navbar-text text-white fw-light" th:text="'👤 ' + ${#authentication.name}">Χρήστης</span>
-                <a class="btn btn-outline-light rounded-pill logo-animated" th:href="@{/logout}" title="Αποσύνδεση">🚪</a>
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/dashboard}"
+                   title="Αρχική / Dashboard" data-bs-toggle="tooltip">🏠</a>
+
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/create}"
+                   title="Νέα Συναλλαγή" data-bs-toggle="tooltip">➕</a>
+
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/transactions/list}"
+                   title="Λίστα Συναλλαγών" data-bs-toggle="tooltip">📄</a>
+
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/statistics}"
+                   title="Στατιστικά" data-bs-toggle="tooltip">📊</a>
+
+                <a class="btn btn-light rounded-pill logo-animated" th:href="@{/profile}"
+                   title="Ρυθμίσεις Χρήστη" data-bs-toggle="tooltip">⚙</a>
+
+                <a class="btn btn-outline-light rounded-pill logo-animated" th:href="@{/logout}"
+                   title="Αποσύνδεση" data-bs-toggle="tooltip">🚪</a>
+
             </div>
 
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltipTriggerList.forEach(el => {
+                new bootstrap.Tooltip(el, {
+                    delay: { show: 100, hide: 100 }
+                });
+            });
+        });
+    </script>
+
 </header>

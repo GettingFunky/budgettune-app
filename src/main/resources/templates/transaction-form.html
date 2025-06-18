@@ -34,12 +34,12 @@
 
 
         <!-- Κρυφό input που πραγματικά στέλνει την τιμή -->
-        <input type="hidden" id="categoryHidden" th:field="*{category}" />
+<!--        <input type="hidden" id="categoryHidden" th:field="*{category}" />-->
 
         <div class="mb-3 d-flex flex-wrap align-items-end gap-3"> <!-- Προσθήκη flex container -->
             <div class="flex-grow-1"> <!-- Το πρώτο select να παίρνει τον διαθέσιμο χώρο -->
                 <label for="category" class="form-label">Κατηγορία</label>
-                <select id="category" th:field="*{category}" class="form-select">
+                <select id="category" th:field="*{category}" class="form-select" required>
                     <option value="">-- Επιλέξτε --</option>
                     <option th:value="Φαγητό">🍽️ Φαγητό</option>
                     <option th:value="Μεταφορές">🚗 Μεταφορές</option>
@@ -49,22 +49,35 @@
                     <option th:value="Μισθός">💼 Μισθός</option>
                     <option th:value="Επικοινωνίες">📞 Επικοινωνίες</option>
                     <option th:value="Δώρα">🎁 Δώρα</option>
-                    <option th:value="__custom__">✨ Άλλη κατηγορία...</option>
+                    <option th:value="Άλλη">✨ Άλλη κατηγορία</option>
+                    <!-- Λιγότερες επιλογές ή έστω χωρίς ! -->
+                    <option
+                            th:if="${transactionDTO.category != null}"
+                            th:unless="${#arrays.contains({'Φαγητό','Μεταφορές','Ενοίκιο','Διασκέδαση','Υγεία','Μισθός','Επικοινωνίες','Δώρα','Άλλη'}, transactionDTO.category)}"
+                            th:value="${transactionDTO.category}"
+                            th:text="'🪄 ' + ${transactionDTO.category}"
+                            selected>
+                    </option>
+
+
                 </select>
             </div>
 
-            <div id="customCategoryDiv" style="display:none; flex-basis: 0; flex-grow: 1;"> <!-- Ισομερής κατανομή χώρου -->
-                <label for="customCategory" class="form-label">✏️ Εισάγετε κατηγορία:</label>
-                <input type="text" id="customCategory" class="form-control" />
-            </div>
+<!--            <div id="customCategoryDiv"-->
+<!--                 th:if="${transactionDTO.category == '__custom__'}"-->
+<!--                 style="flex-basis: 0; flex-grow: 1;">-->
+<!--                <label for="customCategory" class="form-label">✏️ Εισάγετε κατηγορία:</label>-->
+<!--                <input type="text" id="customCategory" class="form-control"-->
+<!--                       th:value="${customCategory != null ? customCategory : ''}" />-->
+<!--            </div>-->
+
         </div>
 
 
 
         <div class="mb-3">
             <label for="date" class="form-label">📅 Ημερομηνία</label>
-            <input type="date" id="date" name="date" th:value="${transactionDTO.date != null ? transactionDTO.date : ''}"
-                   class="form-control" required>
+            <input type="date" id="date" th:field="*{date}" class="form-control" required>
             <div class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
         </div>
 
@@ -108,37 +121,71 @@
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"
 ></div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const categorySelect = document.getElementById('category');
-        const customCategoryDiv = document.getElementById('customCategoryDiv');
-        const customCategoryInput = document.getElementById('customCategory');
-        const categoryHidden = document.getElementById('categoryHidden');
-        const form = document.querySelector('form');
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        const categorySelect = document.getElementById('category');-->
+<!--        const customCategoryDiv = document.getElementById('customCategoryDiv');-->
+<!--        const customCategoryInput = document.getElementById('customCategory');-->
+<!--        const form = document.querySelector('form');-->
 
-        categorySelect.addEventListener('change', function () {
-            if (this.value === '__custom__') {
-                customCategoryDiv.style.display = 'block';
-                categoryHidden.value = ''; // Καθαρίζουμε προσωρινά
-            } else {
-                customCategoryDiv.style.display = 'none';
-                categoryHidden.value = this.value; // Αντιγράφουμε την κατηγορία
-            }
-        });
+<!--        const predefinedCategories = [-->
+<!--            "Φαγητό", "Μεταφορές", "Ενοίκιο", "Διασκέδαση", "Υγεία", "Μισθός", "Επικοινωνίες", "Δώρα", ""-->
+<!--        ];-->
 
-        form.addEventListener('submit', function (e) {
-            if (categorySelect.value === '__custom__') {
-                if (customCategoryInput.value.trim() === '') {
-                    e.preventDefault();
-                    alert("Παρακαλώ συμπληρώστε την κατηγορία.");
-                    customCategoryInput.focus();
-                    return;
-                }
-                categoryHidden.value = customCategoryInput.value.trim(); // Στέλνουμε το custom
-            }
-        });
-    });
-</script>
+<!--        const selectedValue = categorySelect.value;-->
+
+<!--        // 1. Αν είναι custom (edit mode), εμφάνισε πεδίο και βάλε τιμή-->
+<!--        if (!predefinedCategories.includes(selectedValue) && selectedValue !== "") {-->
+<!--            customCategoryDiv.style.display = 'block';-->
+<!--            customCategoryInput.value = selectedValue;-->
+
+<!--            // Βεβαιώσου ότι υπάρχει η επιλογή-->
+<!--            const exists = Array.from(categorySelect.options).some(opt => opt.value === selectedValue);-->
+<!--            if (!exists) {-->
+<!--                const opt = new Option("🪄 " + selectedValue, selectedValue, true, true);-->
+<!--                categorySelect.add(opt);-->
+<!--            }-->
+
+<!--            categorySelect.value = selectedValue;-->
+<!--        }-->
+
+<!--        // ✅ 2. Αν ο χρήστης είχε επιλέξει '__custom__', εμφάνισε πεδίο input-->
+<!--        if (categorySelect.value === '__custom__') {-->
+<!--            customCategoryDiv.style.display = 'block';-->
+<!--            customCategoryInput.value = '';-->
+<!--        }-->
+
+<!--        // 3. Αν αλλάξει επιλογή ο χρήστης-->
+<!--        categorySelect.addEventListener('change', function () {-->
+<!--            if (this.value === '__custom__') {-->
+<!--                customCategoryDiv.style.display = 'block';-->
+<!--                customCategoryInput.value = '';-->
+<!--            } else {-->
+<!--                customCategoryDiv.style.display = 'none';-->
+<!--                customCategoryInput.value = '';-->
+<!--            }-->
+<!--        });-->
+
+<!--        // 4. Πριν υποβληθεί η φόρμα-->
+<!--        form.addEventListener('submit', function (e) {-->
+<!--            if (categorySelect.value === '__custom__') {-->
+<!--                const val = customCategoryInput.value.trim();-->
+<!--                if (val === '') {-->
+<!--                    e.preventDefault();-->
+<!--                    alert("Παρακαλώ συμπληρώστε την κατηγορία.");-->
+<!--                    customCategoryInput.focus();-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                const customOption = new Option("🪄 " + val, val, true, true);-->
+<!--                categorySelect.add(customOption);-->
+<!--                categorySelect.value = val;-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

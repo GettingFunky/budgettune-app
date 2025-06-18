@@ -36,6 +36,12 @@ public class UserSettingsController {
             return "profile";
         }
 
+        if (newPassword.length() < 6) {
+            model.addAttribute("error", "Ο νέος κωδικός πρέπει να περιέχει τουλάχιστον 6 χαρακτήρες.");
+            return "profile";
+        }
+
+
         boolean success = userService.changePassword(authentication.getName(), currentPassword, newPassword);
 
         if (!success) {
